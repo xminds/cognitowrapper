@@ -1,6 +1,6 @@
 package com.xminds.aws.cognito;
 
-import com.amazonaws.SDKGlobalConfiguration;
+import com.amazonaws.SDKGlobalTime;
 
 import java.util.Date;
 
@@ -83,7 +83,7 @@ public class CognitoUserSession {
      */
     public boolean isValidForThreshold() {
         try {
-            long currentTime = System.currentTimeMillis() - SDKGlobalConfiguration.getGlobalTimeOffset() * 1000;
+            long currentTime = System.currentTimeMillis() - SDKGlobalTime.getGlobalTimeOffset() * 1000;
             long expiresInMilliSeconds = idToken.getExpiration().getTime() - currentTime;
             return (expiresInMilliSeconds > CognitoIdentityProviderClientConfig.getRefreshThreshold());
         } catch (Exception e) {
