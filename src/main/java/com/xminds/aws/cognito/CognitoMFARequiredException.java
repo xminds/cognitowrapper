@@ -22,4 +22,10 @@ public class CognitoMFARequiredException extends CognitoIdentityProviderExceptio
     public RespondToAuthChallengeResult getChallenge() {
         return this.challenge;
     }
+
+    public CognitoUserCodeDeliveryDetails getParameters(){
+        return new CognitoUserCodeDeliveryDetails(challenge.getChallengeParameters().get("CODE_DELIVERY_DESTINATION"),
+                challenge.getChallengeParameters().get("CODE_DELIVERY_DELIVERY_MEDIUM"),
+                null);
+    }
 }
