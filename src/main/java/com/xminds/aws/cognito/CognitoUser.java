@@ -902,6 +902,9 @@ public class CognitoUser {
             } else {
                 throw rna;
             }
+
+        } catch (CognitoMFARequiredException cmfre) {
+            throw cmfre;
         } catch (final Exception e) {
             throw new CognitoIdentityProviderException("Respond to challenge", e);
         }
@@ -936,6 +939,8 @@ public class CognitoUser {
             } else {
                 throw rna;
             }
+        } catch (CognitoMFARequiredException cmfre) {
+            throw cmfre;
         } catch (final Exception e) {
             throw new CognitoIdentityProviderException("startWithUserSrpAuth", e);
         }
@@ -992,7 +997,7 @@ public class CognitoUser {
         } else if (CognitoServiceConstants.CHLG_TYPE_USER_PASSWORD_VERIFIER.equals(challengeName)) {
             return null;
         } else if (CognitoServiceConstants.CHLG_TYPE_SMS_MFA.equals(challengeName)) {
-            throw new CognitoMFARequiredException("MFA required");
+            throw new CognitoMFARequiredException("MFA required", challenge);
         } else if (CognitoServiceConstants.CHLG_TYPE_NEW_PASSWORD_REQUIRED.equals(challengeName)) {
             throw new CognitoNewPasswordRequiredException("New Pass required");
         } else {
