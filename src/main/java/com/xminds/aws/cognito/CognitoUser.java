@@ -876,6 +876,20 @@ public class CognitoUser {
         return cognitoUserSession;
     }
 
+    public CognitoUserSession respondNewPasswordChallenge(final String newPassword, final RespondToAuthChallengeResult challenge) {
+        final RespondToAuthChallengeRequest challengeResponse = new RespondToAuthChallengeRequest();
+        Map<String, String> newPassParameters = new HashMap<String, String>();
+        newPassParameters.put(CognitoServiceConstants.CHLG_RESP_NEW_PASSWORD, newPassword);
+        newPassParameters.put(CognitoServiceConstants.CHLG_RESP_USERNAME, usernameInternal);
+        newPassParameters.put(CognitoServiceConstants.CHLG_RESP_DEVICE_KEY, deviceKey);
+        newPassParameters.put(CognitoServiceConstants.CHLG_RESP_SECRET_HASH, secretHash);
+        challengeResponse.setClientId(clientId);
+        challengeResponse.setSession(challenge.getSession());
+        challengeResponse.setChallengeName(challenge.getChallengeName());
+        challengeResponse.setChallengeResponses(newPassParameters);
+        return respondToChallenge(challengeResponse);
+    }
+
     /**
      * This method sends the challenge response to the Cognito IDP service. The call to the Cognito IDP
      * service returns a new challenge and a different method is called to process the challenge.
@@ -903,7 +917,7 @@ public class CognitoUser {
                 throw rna;
             }
 
-        } catch (CognitoMFARequiredException cmfre) {
+        } catch (CognitoMFARequiredException | CognitoNewPasswordRequiredException cmfre) {
             throw cmfre;
         } catch (final Exception e) {
             throw new CognitoIdentityProviderException("Respond to challenge", e);
@@ -939,7 +953,7 @@ public class CognitoUser {
             } else {
                 throw rna;
             }
-        } catch (CognitoMFARequiredException cmfre) {
+        } catch (CognitoMFARequiredException | CognitoNewPasswordRequiredException cmfre) {
             throw cmfre;
         } catch (final Exception e) {
             throw new CognitoIdentityProviderException("startWithUserSrpAuth", e);
@@ -999,7 +1013,7 @@ public class CognitoUser {
         } else if (CognitoServiceConstants.CHLG_TYPE_SMS_MFA.equals(challengeName)) {
             throw new CognitoMFARequiredException("MFA required", challenge);
         } else if (CognitoServiceConstants.CHLG_TYPE_NEW_PASSWORD_REQUIRED.equals(challengeName)) {
-            throw new CognitoNewPasswordRequiredException("New Pass required");
+            throw new CognitoNewPasswordRequiredException("New Pass required", challenge);
         } else {
             throw new CognitoIdentityProviderException("Generic challenge " + challengeName);
         }
