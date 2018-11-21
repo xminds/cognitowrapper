@@ -1015,7 +1015,6 @@ public class CognitoUser {
         } else {
             throw new CognitoIdentityProviderException("Generic challenge " + challengeName);
         }
-        return null;
     }
 
     /**
