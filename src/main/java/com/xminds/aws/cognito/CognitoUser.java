@@ -1005,9 +1005,7 @@ public class CognitoUser {
             final CognitoUserSession cognitoUserSession = getCognitoUserSession(challenge.getAuthenticationResult());
             cacheTokens(cognitoUserSession);
             NewDeviceMetadataType newDeviceMetadata = challenge.getAuthenticationResult().getNewDeviceMetadata();
-            if (newDeviceMetadata == null) {
-                return cognitoUserSession;
-            }
+            return cognitoUserSession;
         } else if (CognitoServiceConstants.CHLG_TYPE_USER_PASSWORD_VERIFIER.equals(challengeName)) {
             return null;
         } else if (CognitoServiceConstants.CHLG_TYPE_SMS_MFA.equals(challengeName)) {
